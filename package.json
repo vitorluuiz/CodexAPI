@@ -5,14 +5,31 @@
   "license": "ISC",
   "author": "vitorluuiz",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node index.js",
+    "tsoa:spec": "tsoa spec",
+    "tsoa:routes": "tsoa routes",
+    "tsoa:gen": "npm run tsoa:spec && npm run tsoa:routes",
+    "prebuild": "npm run tsoa:gen",
+    "dev": "npm run tsoa:gen && nodemon --exec ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
-    "mongoose": "^9.1.6"
+    "mongoose": "^9.1.6",
+    "swagger-ui-express": "^5.0.1",
+    "tsoa": "^7.0.0-alpha.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/mongoose": "^5.11.96",
+    "@types/node": "^25.2.3",
+    "@types/swagger-ui-express": "^4.1.8",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }
