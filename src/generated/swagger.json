@@ -104,6 +104,208 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"ChallengeDifficulty": {
+				"type": "string",
+				"enum": [
+					"Muito fácil",
+					"Fácil",
+					"Médio",
+					"Avançado",
+					"Difícil"
+				]
+			},
+			"TestCaseInput": {
+				"properties": {
+					"input": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "number",
+								"format": "double"
+							},
+							{
+								"additionalProperties": false,
+								"type": "object"
+							},
+							{
+								"items": {
+									"anyOf": [
+										{
+											"type": "string"
+										},
+										{
+											"type": "number",
+											"format": "double"
+										}
+									]
+								},
+								"type": "array"
+							}
+						]
+					},
+					"expectedOutput": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "number",
+								"format": "double"
+							},
+							{
+								"additionalProperties": false,
+								"type": "object"
+							},
+							{
+								"items": {
+									"anyOf": [
+										{
+											"type": "string"
+										},
+										{
+											"type": "number",
+											"format": "double"
+										}
+									]
+								},
+								"type": "array"
+							}
+						]
+					}
+				},
+				"required": [
+					"input",
+					"expectedOutput"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ChallengeResponse": {
+				"properties": {
+					"_id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"creator": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"difficulty": {
+						"$ref": "#/components/schemas/ChallengeDifficulty"
+					},
+					"categories": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"description": {
+						"type": "string"
+					},
+					"testCases": {
+						"items": {
+							"$ref": "#/components/schemas/TestCaseInput"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"_id",
+					"title",
+					"creator",
+					"createdAt",
+					"difficulty",
+					"categories",
+					"description",
+					"testCases"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ErrorResponse": {
+				"properties": {
+					"error": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"error"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateChallengeRequest": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"creator": {
+						"type": "string"
+					},
+					"difficulty": {
+						"$ref": "#/components/schemas/ChallengeDifficulty"
+					},
+					"categories": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"description": {
+						"type": "string"
+					},
+					"testCases": {
+						"items": {
+							"$ref": "#/components/schemas/TestCaseInput"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"title",
+					"creator",
+					"difficulty",
+					"categories",
+					"description",
+					"testCases"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateChallengeRequest": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"difficulty": {
+						"$ref": "#/components/schemas/ChallengeDifficulty"
+					},
+					"categories": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"description": {
+						"type": "string"
+					},
+					"testCases": {
+						"items": {
+							"$ref": "#/components/schemas/TestCaseInput"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -120,7 +322,7 @@
 		}
 	},
 	"paths": {
-		"/api/lobba/create": {
+		"/api/lobby/create": {
 			"post": {
 				"operationId": "CreateLobby",
 				"responses": {
@@ -152,7 +354,7 @@
 				}
 			}
 		},
-		"/api/lobba": {
+		"/api/lobby": {
 			"get": {
 				"operationId": "GetAllLobbies",
 				"responses": {
@@ -177,7 +379,7 @@
 				"parameters": []
 			}
 		},
-		"/api/lobba/{code}": {
+		"/api/lobby/{code}": {
 			"get": {
 				"operationId": "GetLobbyByCode",
 				"responses": {
@@ -237,7 +439,7 @@
 				]
 			}
 		},
-		"/api/lobba/{code}/join": {
+		"/api/lobby/{code}/join": {
 			"post": {
 				"operationId": "JoinLobby",
 				"responses": {
@@ -278,7 +480,7 @@
 				}
 			}
 		},
-		"/api/lobba/{code}/leave": {
+		"/api/lobby/{code}/leave": {
 			"post": {
 				"operationId": "LeaveLobby",
 				"responses": {
@@ -317,6 +519,315 @@
 						}
 					}
 				}
+			}
+		},
+		"/api/challenges": {
+			"post": {
+				"operationId": "CreateChallenge",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/ChallengeResponse"
+										},
+										{
+											"$ref": "#/components/schemas/ErrorResponse"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Challenges"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateChallengeRequest"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetAllChallenges",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ChallengeResponse"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Challenges"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/challenges/difficulties": {
+			"get": {
+				"operationId": "GetAvailableDifficulties",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Challenges"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/challenges/{id}": {
+			"get": {
+				"operationId": "GetChallengeById",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/ChallengeResponse"
+										},
+										{
+											"$ref": "#/components/schemas/ErrorResponse"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Challenges"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateChallenge",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/ChallengeResponse"
+										},
+										{
+											"$ref": "#/components/schemas/ErrorResponse"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Challenges"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateChallengeRequest"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteChallenge",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/SuccessMsg"
+										},
+										{
+											"$ref": "#/components/schemas/ErrorResponse"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Challenges"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/challenges/creator/{creator}": {
+			"get": {
+				"operationId": "GetChallengesByCreator",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ChallengeResponse"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Challenges"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "creator",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/challenges/difficulty/{difficulty}": {
+			"get": {
+				"operationId": "GetChallengesByDifficulty",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ChallengeResponse"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Challenges"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "difficulty",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/challenges/category/{category}": {
+			"get": {
+				"operationId": "GetChallengesByCategory",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ChallengeResponse"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Challenges"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		}
 	},
